@@ -161,13 +161,13 @@ singleCon :: Name -> Q Bool
 singleCon n = do
   dec <- recover noScope $ do
     Just vn <- lookupValueName (show n)
-    DataConI _ _ tn _ <- reify vn
+    DataConI _ _ tn <- reify vn
     TyConI dec <- reify tn
     return dec
   case dec of
-    DataD _ _ _ [_] _ -> return True
+    DataD _ _ _ _ [_] _ -> return True
     NewtypeD {} -> return True
-    DataD _ _ _ (_:_) _ -> return False
+    DataD _ _ _ _ (_:_) _ -> return False
     _ -> fail $ "ado singleCon: not a data declaration: " ++ show dec
  where
   noScope = fail $ "Data constructor " ++ show n ++ " lookup failed."
